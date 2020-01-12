@@ -4,6 +4,9 @@
   "description": "Sorting visualization",
   "private": true,
   "scripts": {
+    "dev": "next",
+    "build": "next build",
+    "start": "next start"
   },
   "author": "Ashley-Xu",
   "license": "ISC",
