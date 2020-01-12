@@ -1,0 +1,10 @@
+{
+  "name": "sorting_visualization",
+  "version": "1.0.0",
+  "description": "Sorting visualization",
+  "private": true,
+  "scripts": {
+  },
+  "author": "Ashley-Xu",
+  "license": "ISC"
+}
