@@ -10,11 +10,16 @@ const MenuEntry = ({name, algorithm}) => {
         <style jsx>{`
           a {
             width: 150px;
-            height: 150px;
-            background: bisque;
+            height: 100px;
             display: inline-flex;
             align-items: center;
+            color: white;
+            border: 2px solid white;
+            border-radius: 20px;
             justify-content: center;
+            text-decoration: none;
+            font-size: large;
+            font-weight: bold;
           }
         `}</style>
     </>;
@@ -25,7 +30,7 @@ const Menu = () => {
         <MenuEntry name="Merge Sort" algorithm="mergesort"/>
         <style jsx>{`
           div {
-            background: aquamarine;
+            background: #1C1C1C;
             flex-grow: 1;
             display: flex;
             justify-content: center;
@@ -41,7 +46,8 @@ const BottomBar = () => {
         <style jsx>{`
           div {
             height: 50px;
-            background: rebeccapurple;
+            background: black;
+            color: grey;
           }
         `}</style>
     </div>;

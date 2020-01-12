@@ -5,10 +5,11 @@ const TopBar = () => (
         <h2>Sorting Visualizer</h2>
         <style jsx>{`
           div {
-            height: 50px;
-            background: rebeccapurple;
+            height: 60px;
+            background: #1C1C1C;
+            color: orange;
             display: flex;
-            padding: 0px 10px;
+            padding: 0px 20px;
             align-items: center;
           }
           h1, h2, h3, h4, h5, h6 {
@@ -34,6 +35,9 @@ export default ({children}) => (
         <style global jsx>{`
           body {
             margin: 0;
+          }
+          div {
+            font-family: "Roboto Light", sans-serif;
           }
         `}</style>
     </div>
