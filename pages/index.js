@@ -1,5 +1,6 @@
 import React from "react";
 import Link from "next/link";
+import Nav from "../components/nav";
 
 const MenuEntry = ({name, algorithm}) => {
     return <>
@@ -34,24 +35,6 @@ const Menu = () => {
     </div>;
 };
 
-const TopBar = () => {
-    return <div>
-        <h2>Sorting Visualizer</h2>
-        <style jsx>{`
-          div {
-            height: 50px;
-            background: rebeccapurple;
-            display: flex;
-            padding: 0px 10px;
-            align-items: center;
-          }
-          h1, h2, h3, h4, h5, h6 {
-            display: inline;
-          }
-        `}</style>
-    </div>;
-};
-
 const BottomBar = () => {
     return <div>
         Bottom bar.. put some buttons in it maybe
@@ -64,27 +47,9 @@ const BottomBar = () => {
     </div>;
 };
 
-export default () => {
-    return (
-        <div>
-            <TopBar/>
-            <Menu/>
-            <BottomBar/>
-            <style jsx>{`
-              div {
-                height: 100vh;
-                background: darkgrey;
-                display: flex;
-                flex-direction: column;
-                justify-content: space-between;
-              }
-            `}</style>
-            <style global jsx>{`
-              body {
-                margin: 0;
-                height: 100%;
-              }
-            `}</style>
-        </div>
-    );
-};
+export default () => (
+    <Nav>
+        <Menu/>
+        <BottomBar/>
+    </Nav>
+);
