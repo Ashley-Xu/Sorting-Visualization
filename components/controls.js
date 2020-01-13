@@ -35,9 +35,9 @@ const Slider = ({onChange, min, max, init, title = null}) => (
     </Group>
 );
 
-const Button = ({children}) => (
+const Button = ({children, onClick}) => (
     <>
-        <button>{children}</button>
+        <button onClick={onClick}>{children}</button>
         <style jsx>{`
           button {
             background: none;
@@ -54,18 +54,24 @@ const Button = ({children}) => (
 export default () => {
     const {
         N: [N, set_N],
-        step: [step, set_step]
+        step: [step, set_step],
+        paused: [paused, set_paused]
     } = useContext(VisualizerStates);
+    const reset = N => {
+        set_N(N);
+        set_step(0);
+        set_paused(true);
+    };
 
     return (
         <div>
             <Group>
-                <Button>Back</Button>
-                <Button>Pause</Button>
-                <Button>Forward</Button>
+                <Button onClick={() => set_step(step - 1)}>Back</Button>
+                <Button onClick={() => set_paused(!paused)}>{paused ? "Play" : "Pause"}</Button>
+                <Button onClick={() => set_step(step + 1)}>Forward</Button>
             </Group>
             <Space/>
-            <Slider onChange={set_N} title="Input size" min="1" max="500" init={N}/>
+            <Slider onChange={reset} title="Input size" min="1" max="500" init={N}/>
             <Space/>
             <Button>Shuffle</Button>
             <style jsx>{`
