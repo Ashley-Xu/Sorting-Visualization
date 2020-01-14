@@ -4,7 +4,7 @@ import Nav from "../components/nav";
 
 const MenuEntry = ({name, algorithm}) => {
     return <>
-        <Link href={"/[visualizer]"} as={`/${algorithm}`}>
+        <Link href={"/[algorithm]"} as={`/${algorithm}`}>
             <a>{name}</a>
         </Link>
         <style jsx>{`

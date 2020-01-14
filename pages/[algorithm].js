@@ -1,4 +1,4 @@
-import React, {useState, useContext} from "react";
+import React, {useState} from "react";
 import {useRouter} from "next/router";
 import Nav from "../components/nav";
 import Controls from "../components/controls";
@@ -18,6 +18,7 @@ const playback_init = size => ({
 const size_init = 100;
 
 export default () => {
+    const algorithm = useRouter().query.algorithm;
     const [size, set_size] = useState(size_init);
     const [playback, set_playback] = useState(playback_init(size));
     const [reset, set_reset] = useState(true);
