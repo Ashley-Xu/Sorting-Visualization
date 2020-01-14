@@ -52,26 +52,26 @@ const Button = ({children, onClick}) => (
 );
 
 export default () => {
-    const {
-        N: [N, set_N],
-        step: [step, set_step],
-        paused: [paused, set_paused]
-    } = useContext(VisualizerStates);
-    const reset = N => {
-        set_N(N);
-        set_step(0);
-        set_paused(true);
-    };
+    const {size, set_size, playback, set_playback, set_reset} = useContext(VisualizerStates);
 
+    const handle_slider = size => {
+        set_size(size);
+        set_reset(false);
+    };
+    const back = () => set_playback({...playback, step: Math.max(0, playback.step - 1)});
+    const forward = () => set_playback({...playback, step: playback.step + 1});
+    const pause = () => set_playback({...playback, paused: !playback.paused});
+
+    console.log(`step: ${playback.step}`)
     return (
         <div>
             <Group>
-                <Button onClick={() => set_step(step - 1)}>Back</Button>
-                <Button onClick={() => set_paused(!paused)}>{paused ? "Play" : "Pause"}</Button>
-                <Button onClick={() => set_step(step + 1)}>Forward</Button>
+                <Button onClick={back}>Back</Button>
+                <Button onClick={pause}>{playback.paused ? "Play" : "Pause"}</Button>
+                <Button onClick={forward}>Forward</Button>
             </Group>
             <Space/>
-            <Slider onChange={reset} title="Input size" min="1" max="500" init={N}/>
+            <Slider onChange={handle_slider} title="Input size" min="1" max="500" init={size}/>
             <Space/>
             <Button>Shuffle</Button>
             <style jsx>{`

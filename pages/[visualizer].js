@@ -5,15 +5,36 @@ import Controls from "../components/controls";
 import {VisualizerStates} from "../components/contexts";
 import BarChart from "../components/barchart";
 
-export default () => {
-    const N = useState(100);
-    const paused = useState(true);
-    const step = useState(0);
-    const provideStates = children =>
-        <VisualizerStates.Provider
-            value={{N, paused, step}}
-        >{children}</VisualizerStates.Provider>;
+const random_list = (size, min, max) => Array.from({length: size}, () =>
+    min + Math.floor(Math.random() * (max - min))
+);
 
+const playback_init = size => ({
+    paused: true,
+    step: 0,
+    input: random_list(size, 1, size),
+    frames: []
+});
+const size_init = 100;
+
+export default () => {
+    const [size, set_size] = useState(size_init);
+    const [playback, set_playback] = useState(playback_init(size));
+    const [reset, set_reset] = useState(true);
+
+    if (!reset) {
+        set_playback(playback_init(size));
+        set_size(size_init);
+        set_reset(true);
+        return null;
+    }
+
+    const provideStates = children =>
+        <VisualizerStates.Provider value={{
+            size, set_size,
+            playback, set_playback,
+            reset, set_reset
+        }}>{children}</VisualizerStates.Provider>;
     return provideStates(
         <Nav>
             <div className="container">
