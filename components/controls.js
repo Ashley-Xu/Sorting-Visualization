@@ -62,7 +62,6 @@ export default () => {
     const forward = () => set_playback({...playback, step: playback.step + 1});
     const pause = () => set_playback({...playback, paused: !playback.paused});
 
-    console.log(`step: ${playback.step}`)
     return (
         <div>
             <Group>
