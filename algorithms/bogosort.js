@@ -1,9 +1,8 @@
 export default function* (input) {
     while (!is_asc(input)) {
         shuffleArray(input);
-        yield {list: input};
+        yield {list: [...input]};
     }
-    return {list: input};
 }
 
 const is_asc = list => {
