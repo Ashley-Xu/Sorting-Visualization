@@ -1,6 +1,6 @@
 import React from "react";
 
-export default ({list, min, max}) => {
+export default ({frame: {list, highlights = []}, min, max}) => {
     const base = 0.1;
     const heights = list.map(v =>
         base + (1 - base) * (v - min) / (max - min)

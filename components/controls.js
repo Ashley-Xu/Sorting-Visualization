@@ -52,22 +52,26 @@ const Button = ({children, onClick}) => (
 );
 
 export default () => {
-    const {size, set_size, playback, set_playback, set_reset} = useContext(VisualizerStates);
+    const {
+        size, set_size,
+        paused, set_paused,
+        frame, set_frame,
+        set_reset
+    } = useContext(VisualizerStates);
 
     const handle_slider = size => {
         set_size(size);
         set_reset(false);
     };
-    const back = () => set_playback({...playback, step: Math.max(0, playback.step - 1)});
-    const forward = () => set_playback({...playback, step: playback.step + 1});
-    const pause = () => set_playback({...playback, paused: !playback.paused});
-
+    const handle_back = () => set_frame(Math.max(0, frame - 1));
+    const handle_pause = () => set_paused(!paused);
+    const handle_forward = () => set_frame(frame + 1);
     return (
         <div>
             <Group>
-                <Button onClick={back}>Back</Button>
-                <Button onClick={pause}>{playback.paused ? "Play" : "Pause"}</Button>
-                <Button onClick={forward}>Forward</Button>
+                <Button onClick={handle_back}>Back</Button>
+                <Button onClick={handle_pause}>{paused ? "Play" : "Pause"}</Button>
+                <Button onClick={handle_forward}>Forward</Button>
             </Group>
             <Space/>
             <Slider onChange={handle_slider} title="Input size" min="1" max="500" init={size}/>
