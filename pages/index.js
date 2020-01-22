@@ -29,6 +29,8 @@ const Menu = () => {
     return <div>
         <MenuEntry name="Bogo Sort" algorithm="bogosort"/>
         <MenuEntry name="Insertion Sort" algorithm="insertionsort"/>
+        <MenuEntry name="Merge Sort" algorithm="mergesort"/>
+        <MenuEntry name="Bubble Sort" algorithm="bubblesort"/>
         <style jsx>{`
           div {
             background: #1C1C1C;

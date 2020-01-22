@@ -9,19 +9,20 @@ import algorithms from "../algorithms";
 
 const FRAME_MAX = 1024;
 
+//Return an array of length = size chosen, and generate random num to put in it
 const random_list = (size, min, max) => Array.from({length: size}, () =>
     min + Math.floor(Math.random() * (max - min))
 );
 
-const size_init = 100;
+const size_init = 10;
 const task_init = (size, algorithm) => {
-    const gen = algorithms[algorithm];
-    if (!gen || size < 1)
+    const generator = algorithms[algorithm]; //so that users can view the process of sorting
+    if (!generator || size < 1)
         return null;
     const input = random_list(size, 1, size);
     return {
         input: input,
-        generator: gen(input),
+        generator: generator(input),
         frame_buf: [], // circular buffer
         generated: 0
     };
