@@ -6,7 +6,7 @@ export default function* (list) {
         while (j > 0 && list[j - 1] > list[j]) {
             [list[j], list[j - 1]] = [list[j - 1], list[j]];
             --j;
-            yield {list}
+            yield {list: [...list]}
         }
         ++i;
     }
