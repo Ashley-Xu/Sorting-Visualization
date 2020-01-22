@@ -1,7 +1,7 @@
 export default function* merge_Sort(list){
     //Since we need to yield the whole sorted list, it would be hard to do so during recursion
 
-    yield* real_merge_Sort(list);
+    yield* real_merge_Sort(list, 0, list.length-1);
 }
 
 //translated from pseudocode https://www.cs.mcgill.ca/~dprecup/courses/IntroCS/Lectures/comp250-lecture15.pdf
@@ -14,9 +14,8 @@ function* real_merge_Sort(list, i, j) {
             const mid = Math.floor(i+j/2);
             //let list1 = list.slice(0, mid);
             //let list2 = list.slice(mid);
-            return merge(real_merge_Sort(list, i, mid), real_merge_Sort(list, mid+1, j));
+            yield merge(real_merge_Sort(list, i, mid), real_merge_Sort(list, mid+1, j));
         }
-
     }
 }
 
