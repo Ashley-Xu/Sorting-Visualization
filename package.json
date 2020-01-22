@@ -1,5 +1,5 @@
 {
-  "name": "sorting_visualization",
+  "name": "ls",
   "version": "1.0.0",
   "description": "Sorting visualization",
   "private": true,
@@ -14,5 +14,15 @@
     "next": "^9.1.7",
     "react": "^16.12.0",
     "react-dom": "^16.12.0"
-  }
+  },
+  "main": "index.js",
+  "devDependencies": {},
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Ashley-Xu/Sorting-Visualization.git"
+  },
+  "bugs": {
+    "url": "https://github.com/Ashley-Xu/Sorting-Visualization/issues"
+  },
+  "homepage": "https://github.com/Ashley-Xu/Sorting-Visualization#readme"
 }
