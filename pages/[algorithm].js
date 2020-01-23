@@ -14,7 +14,7 @@ const random_list = (size, min, max) => Array.from({length: size}, () =>
     min + Math.floor(Math.random() * (max - min))
 );
 
-const size_init = 10;
+const size_init = 100;
 const task_init = (size, algorithm) => {
     const generator = algorithms[algorithm]; //so that users can view the process of sorting
     if (!generator || size < 1)
