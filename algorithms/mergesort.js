@@ -1,6 +1,6 @@
 //translated from pseudocode https://www.cs.mcgill.ca/~dprecup/courses/IntroCS/Lectures/comp250-lecture15.pdf
 
-export default function* merge_Sort(list, s = 0, e = length - 1){
+export default function* merge_sort(list, s = 0, e = length - 1){
     //Since we need to yield the whole sorted list, it would be hard to do so during recursion
     const mid = Math.floor((s+e)/2);
     if ((s + 2) > e){
@@ -32,25 +32,38 @@ export default function* merge_Sort(list, s = 0, e = length - 1){
 //     }
 // }
 
+// function merge(list, s, mid, e){
+//     let tmp = [];
+//     let i = s;
+//     let j = mid + 1;
+//     let k = 0;
+//     while (i <= mid || j <= e){
+//         if (j = e + 1 || list[i] <= list[j]){
+//            tmp[k] = list[i];
+//         }else if(i = mid +1 || list[i] > list[j]){
+//             tmp[k] = list[j];
+//             j++
+//         }
+//         k++
+//     }
+//     for (k = 1; k < s-e+1; k++){
+//         list[k+e-1] = tmp[k-1]
+//     }
+// }
 function merge(list, s, mid, e){
-    let tmp = [];
-    let i = s;
+    const copy = [];
     let j = mid + 1;
-    let k = 0;
-    while (i <= mid || j <= e){
-        if (j = e + 1 || list[i] <= list[j]){
-           tmp[k] = list[i];
-        }else if(i = mid +1 || list[i] > list[j]){
-            tmp[k] = list[j];
-            j++
+    let k = s;
+    for (let i = s; i <= mid; ++i){
+        while(j <= e && copy[i] > copy[j]){
+            list[k++] = copy[j++];
         }
-        k++
+        list[k++] = copy [i];
     }
-    for (k = 1; k < s-e+1; k++){
-        list[k+e-1] = tmp[k-1]
+    while(j <= e){
+        list[k++] = copy[j++];
     }
 }
-
 
 //
 // function merge(list1, list2) {
