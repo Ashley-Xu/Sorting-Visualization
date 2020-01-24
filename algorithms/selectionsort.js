@@ -10,10 +10,10 @@ export default function* selection_Sort(list){
         for (let j=i + 1; j < list.length; j++){ // finding the min in the remaining array
             if (list[j] < minValue){
                 currentIndex = j;
-                minValue = list[k];
+                minValue = list[j];
             }
         }
-        if(currentIndex!= i){  //
+        if(currentIndex!= i){
             swap(list, i, currentIndex)
         }
         yield {list: [...list]};
@@ -24,5 +24,5 @@ export default function* selection_Sort(list){
         arr[index2] = temp;
     }
 
-    return list;
+    yield {list: [...list]};
 }
