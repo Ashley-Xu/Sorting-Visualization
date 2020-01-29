@@ -59,25 +59,27 @@ const useControls = () => {
     const [paused, set_paused] = useState(true);
     const [seek, set_seek] = useState(0);
     const [reset, set_reset] = useState(false);
+    useEffect(() => {
+        if (reset)
+            set_reset(false);
+    });
 
-    if (seek)
-        set_seek(0);
-    if (reset)
-        set_reset(false);
     const set_input = size => {
         set_input_state(random_list(size, 1, size));
         set_reset(true);
     };
-    const toggle_paused = () => set_paused(!paused);
+    const clear_seek = () => {
+        set_seek(0);
+        return reset ? 0 : seek;
+    };
     return {
         input,
         set_input,
         paused: reset || paused,
-        toggle_paused,
-        seek: reset ? 0 : seek,
+        set_paused,
+        clear_seek,
         set_seek,
-        reset,
-        set_reset
+        reset
     };
 };
 
@@ -89,13 +91,13 @@ export const ControlsContextProvider = ({children}) => (
 
 export default () => {
     const {
-        paused, toggle_paused, set_seek, input, set_input
+        paused, set_paused, set_seek, input, set_input
     } = useControlsContext();
     return (
         <div>
             <Group>
                 <Button onClick={() => set_seek(-1)}>Back</Button>
-                <Button onClick={toggle_paused}>{paused ? "Play" : "Pause"}</Button>
+                <Button onClick={() => set_paused(!paused)}>{paused ? "Play" : "Pause"}</Button>
                 <Button onClick={() => set_seek(1)}>Forward</Button>
             </Group>
             <Space/>
