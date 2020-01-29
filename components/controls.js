@@ -1,5 +1,4 @@
-import React, {useContext} from "react";
-import {VisualizerStates} from "./contexts";
+import React, {useContext, createContext, useState, useEffect} from "react";
 
 const Space = () => <Group grow> </Group>;
 
@@ -51,30 +50,56 @@ const Button = ({children, onClick}) => (
     </>
 );
 
+const random_list = (size, min, max) => Array.from({length: size}, () =>
+    min + Math.floor(Math.random() * (max - min))
+);
+
+const useControls = () => {
+    const [input, set_input_state] = useState(random_list(100, 1, 100));
+    const [paused, set_paused] = useState(true);
+    const [seek, set_seek] = useState(0);
+    const [reset, set_reset] = useState(false);
+
+    if (seek)
+        set_seek(0);
+    if (reset)
+        set_reset(false);
+    const set_input = size => {
+        set_input_state(random_list(size, 1, size));
+        set_reset(true);
+    };
+    const toggle_paused = () => set_paused(!paused);
+    return {
+        input,
+        set_input,
+        paused: reset || paused,
+        toggle_paused,
+        seek: reset ? 0 : seek,
+        set_seek,
+        reset,
+        set_reset
+    };
+};
+
+const Context = createContext(null);
+export const useControlsContext = () => useContext(Context);
+export const ControlsContextProvider = ({children}) => (
+    <Context.Provider value={{...useControls()}}>{children}</Context.Provider>
+);
+
 export default () => {
     const {
-        size, set_size,
-        paused, set_paused,
-        frame, set_frame,
-        set_reset
-    } = useContext(VisualizerStates);
-
-    const handle_slider = size => {
-        set_size(size);
-        set_reset(false);
-    };
-    const handle_back = () => set_frame(Math.max(0, frame - 1));
-    const handle_pause = () => set_paused(!paused);
-    const handle_forward = () => set_frame(frame + 1);
+        paused, toggle_paused, set_seek, input, set_input
+    } = useControlsContext();
     return (
         <div>
             <Group>
-                <Button onClick={handle_back}>Back</Button>
-                <Button onClick={handle_pause}>{paused ? "Play" : "Pause"}</Button>
-                <Button onClick={handle_forward}>Forward</Button>
+                <Button onClick={() => set_seek(-1)}>Back</Button>
+                <Button onClick={toggle_paused}>{paused ? "Play" : "Pause"}</Button>
+                <Button onClick={() => set_seek(1)}>Forward</Button>
             </Group>
             <Space/>
-            <Slider onChange={handle_slider} title="Input size" min="1" max="500" init={size}/>
+            <Slider onChange={set_input} title="Input size" min="1" max="500" init={input.length}/>
             <Space/>
             <Button>Shuffle</Button>
             <style jsx>{`
