@@ -54,8 +54,8 @@ const random_list = (size, min, max) => Array.from({length: size}, () =>
     min + Math.floor(Math.random() * (max - min))
 );
 
-const useControls = () => {
-    const [input, set_input_state] = useState(random_list(100, 1, 100));
+const useStates = () => {
+    const [input, set_input] = useState(random_list(100, 1, 100));
     const [paused, set_paused] = useState(true);
     const [seek, set_seek] = useState(0);
     const [reset, set_reset] = useState(false);
@@ -64,41 +64,72 @@ const useControls = () => {
             set_reset(false);
     });
 
-    const set_input = size => {
-        set_input_state(random_list(size, 1, size));
-        set_reset(true);
-    };
-    const clear_seek = () => {
-        set_seek(0);
-        return reset ? 0 : seek;
-    };
+    const rst_enable = f => (
+        (...args) => {
+            set_reset(true);
+            return f(...args);
+        }
+    );
+    const rst_mask = f => (
+        (...args) => {
+            if (!reset)
+                return f(...args);
+        }
+    );
     return {
         input,
-        set_input,
-        paused: reset || paused,
-        set_paused,
-        clear_seek,
-        set_seek,
+        set_input: rst_enable(rst_mask(set_input)),
+        paused,
+        set_paused: rst_mask(set_paused),
+        seek,
+        set_seek: rst_mask(set_seek),
         reset
     };
 };
 
 const Context = createContext(null);
-export const useControlsContext = () => useContext(Context);
 export const ControlsContextProvider = ({children}) => (
-    <Context.Provider value={{...useControls()}}>{children}</Context.Provider>
+    <Context.Provider value={{...useStates()}}>{children}</Context.Provider>
 );
 
+export const useInput = () => {
+    const {input, set_input} = useContext(Context);
+    const new_input = size => {
+        set_input(random_list(size, 1, size));
+    };
+    return [input, new_input];
+};
+
+export const usePaused = () => {
+    const {paused, set_paused} = useContext(Context);
+    const toggle_paused = value => {
+        set_paused(value === undefined ? !paused : value)
+    };
+    return [paused, toggle_paused];
+};
+
+export const useSeek = clear => {
+    const {seek, set_seek} = useContext(Context);
+    useEffect(() => {
+        if (clear)
+            set_seek(0);
+    });
+    const add_seek = offset => set_seek(seek + offset);
+    return [seek, add_seek];
+};
+
+export const useReset = () => useContext(Context).reset;
+
 export default () => {
-    const {
-        paused, set_paused, set_seek, input, set_input
-    } = useControlsContext();
+    const [input, set_input] = useInput();
+    const [seek, add_seek] = useSeek();
+    const [paused, toggle_pause] = usePaused();
     return (
         <div>
             <Group>
-                <Button onClick={() => set_seek(-1)}>Back</Button>
-                <Button onClick={() => set_paused(!paused)}>{paused ? "Play" : "Pause"}</Button>
-                <Button onClick={() => set_seek(1)}>Forward</Button>
+                <Button onClick={() => add_seek(-1)}>Back</Button>
+                <Button onClick={() => toggle_pause()}>{paused ? "Play" : "Pause"}</Button>
+                <Button onClick={() => add_seek(1)}>Forward</Button>
             </Group>
             <Space/>
             <Slider onChange={set_input} title="Input size" min="1" max="500" init={input.length}/>

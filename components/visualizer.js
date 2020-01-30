@@ -1,15 +1,23 @@
 import React, {useState, useEffect} from "react";
 import Error from "next/error";
 import Nav from "../components/nav";
-import Controls, {useControlsContext} from "../components/controls";
+import Controls, {useInput, useReset, useSeek, usePaused} from "../components/controls";
 import BarChart from "../components/barchart";
 
+function Buffer(input, generator) {
+    const gen = generator([...input]);
+}
+
 export default ({generator}) => {
-    const {input, paused, set_paused, clear_seek, set_seek, reset} = useControlsContext();
+    const [input] = useInput();
+    const [paused, toggle_paused] = usePaused();
+    const [seek, add_seek] = useSeek(true);
+    const reset = useReset();
+    const [frame, set_frame] = useState(0);
     useEffect(() => {
         if (paused)
             return;
-        const timer = setTimeout(() => set_seek(1), 50);
+        const timer = setTimeout(() => add_seek(1), 50);
         return () => clearTimeout(timer);
     });
 
