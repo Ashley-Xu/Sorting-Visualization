@@ -59,6 +59,7 @@ const useStates = () => {
     const [paused, set_paused] = useState(true);
     const [seek, set_seek] = useState(0);
     const [reset, set_reset] = useState(false);
+    console.debug(`======== paused ${paused} seek ${seek} reset ${reset} ========`);
     useEffect(() => {
         if (reset)
             set_reset(false);
