@@ -3,7 +3,7 @@ import {useRouter} from "next/router";
 import Error from "next/error";
 import Visualizer from "../components/visualizer";
 import algorithms from "../algorithms";
-import {ControlsContextProvider} from "../components/controls";
+import {ControlsContextProvider} from "../hooks/controls";
 
 export default () => {
     const gen = algorithms[useRouter().query.algorithm];
