@@ -7,7 +7,9 @@ const Context = createContext(null);
 export const ControlsContextProvider = ({children}) => (
     <Context.Provider value={{
         reset: useState(RESET_INIT),
-        input: useState(random_list(100, 1, 100))
+        input: useState(random_list(100, 1, 100)),
+        seek: useState(0),
+        pause: useState(true)
     }}>{children}</Context.Provider>
 );
 
@@ -36,4 +38,23 @@ export const useInput = () => {
         enable_reset();
     };
     return [input, new_input];
+};
+
+export const useSeek = () => {
+    const [seek, set_seek] = useContext(Context).seek;
+    useEffect(() => set_seek(0));
+
+    return [seek, set_seek];
+};
+
+export const usePause = () => {
+    const [pause, set_pause] = useContext(Context).pause;
+
+    const toggle = value => {
+        if (value === undefined)
+            set_pause(!pause);
+        else
+            set_pause(value);
+    };
+    return [pause, toggle];
 };

@@ -3,7 +3,7 @@ import Error from "next/error";
 import Nav from "../components/nav";
 import Controls from "../components/controls";
 import BarChart from "../components/barchart";
-import {useReset, useInput} from "../hooks/controls";
+import {useReset, useInput, useSeek, usePause} from "../hooks/controls";
 
 const useGeneratorBuffer = generator => {
     const [buf, set_buf] = useState([]);
@@ -68,7 +68,7 @@ const usePlayback = (input, generator) => {
         is_first: cursor === 0,
         is_last: cursor === last && ended
     };
-    console.debug(`playback valid from ${first} to ${last}, frame unavailable: ${!buf_value(cursor)}`);
+    console.debug(`playback valid from ${first} to ${last}, current: ${cursor} unavailable: ${!buf_value(cursor)}`);
     return [status, seek, reset];
 };
 
@@ -81,16 +81,29 @@ export default ({generator}) => {
         playback_seek,
         playback_reset
     ] = usePlayback(input, generator);
+    const [seek, set_seek] = useSeek();
+    const [pause, set_pause] = usePause();
     useEffect(() => {
         if (reset) {
             console.debug(`resetting visualizer`);
             playback_reset();
-            return;
         }
-        if (is_last)
-            console.log(`last frame. should pause`);
+    });
+    useEffect(() => {
         if (is_empty)
             playback_seek(1);
+        else if (seek)
+            playback_seek(seek);
+    });
+    useEffect(() => {
+        if (pause)
+            return;
+        else if (is_last) {
+            set_pause(true);
+            return;
+        }
+        const timer = setTimeout(() => set_seek(1), 50);
+        return () => clearTimeout(timer);
     });
 
     if (!frame)

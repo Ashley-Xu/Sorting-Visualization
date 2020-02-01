@@ -1,5 +1,5 @@
 import React from "react";
-import {useInput} from "../hooks/controls";
+import {useInput, usePause, useSeek} from "../hooks/controls";
 
 const Space = () => <Group grow> </Group>;
 
@@ -53,12 +53,14 @@ const Button = ({children, onClick}) => (
 
 export default () => {
     const [input, set_input] = useInput();
+    const [seek, set_seek] = useSeek();
+    const [pause, toggle_pause] = usePause();
     return (
         <div>
             <Group>
-                <Button onClick={() => console.debug(`back`)}>Back</Button>
-                <Button onClick={() => console.debug(`toggle pause`)}>{"Play"}</Button>
-                <Button onClick={() => console.debug(`forward`)}>Forward</Button>
+                <Button onClick={() => set_seek(-1)}>Back</Button>
+                <Button onClick={() => toggle_pause()}>{pause ? "Play" : "Pause"}</Button>
+                <Button onClick={() => set_seek(1)}>Forward</Button>
             </Group>
             <Space/>
             <Slider onChange={set_input} title="Input size" min="1" max="500" init={input.length}/>
