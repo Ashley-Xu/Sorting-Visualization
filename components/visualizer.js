@@ -5,83 +5,102 @@ import Controls from "../components/controls";
 import BarChart from "../components/barchart";
 import {useReset, useInput} from "../hooks/controls";
 
-const useBuffer = (input, generator) => {
-    const [gen, set_gen] = useState(generator([...input]));
+const useGeneratorBuffer = generator => {
     const [buf, set_buf] = useState([]);
-    const [range, set_range] = useState([0, 0]);
+    const [[top, base], set_range] = useState([0, 0]);
+    const [ended, set_ended] = useState(false);
 
     const BUF_MAX = 1024;
-    let [hi, lo] = range;
 
     const clear = () => {
-        set_gen(generator([...input]));
         set_buf([]);
         set_range([0, 0]);
+        set_ended(false);
     };
-
-    const fill = target => {
-        while (target >= hi) {
-            const {value: frame, done} = gen.next();
-            if (frame)
-                buf[hi++ % BUF_MAX] = frame;
-            if (done)
-                break;
-        }
-        lo = Math.max(0, hi - BUF_MAX);
-        set_range([hi, lo]);
-    };
-
-    const frame = i => buf[i % BUF_MAX];
-
-    return {range, frame, fill, clear};
-};
-
-const useRingBuffer = (input, generator) => {
-    const [gen, set_gen] = useState(generator([...input]));
-    const [buf] = useState([]);
-    const [range, set_range] = useState([0, 0]);
-
-    const BUF_MAX = 1024;
-    let [hi, lo] = range;
 
     const shift = offset => {
+        let p = top;
+        const target = p + offset;
+        const b = [...buf];
+        while (p < target) {
+            const {value, done} = generator.next();
+            if (value)
+                b[p++ % BUF_MAX] = value;
+            if (done) {
+                set_ended(true);
+                break;
+            }
+        }
+        set_buf(b);
+        set_range([p, Math.max(0, p - BUF_MAX)]);
+        return p - target + offset;
     };
+
+    const value = i => i < base || i >= top ? undefined : buf[i % BUF_MAX];
+
+    return [[base, top - 1, ended], value, shift, clear];
+};
+
+const usePlayback = (input, generator) => {
+    const [gen, set_gen] = useState(generator([...input]));
+    const [[first, last, ended], buf_value, buf_shift, buf_clear] = useGeneratorBuffer(gen);
+    const [cursor, set_cursor] = useState(-1);
 
     const reset = () => {
         set_gen(generator([...input]));
-        set_range([0, 0]);
+        buf_clear();
+        set_cursor(-1);
     };
 
-    const value = i => buf[i % BUF_MAX];
+    const seek = offset => {
+        let pos = cursor + offset;
+        if (pos < first)
+            pos = first;
+        if (pos > last)
+            pos = last + buf_shift(pos - last);
+        set_cursor(pos);
+        return pos - cursor;
+    };
 
-    return [{hi, lo, value}, shift, reset];
+    const status = {
+        frame: buf_value(cursor),
+        is_empty: cursor === -1,
+        is_first: cursor === 0,
+        is_last: cursor === last && ended
+    };
+    console.debug(`playback valid from ${first} to ${last}, frame unavailable: ${!buf_value(cursor)}`);
+    return [status, seek, reset];
 };
 
 export default ({generator}) => {
+    console.debug(`======== rendering visualizer ========`);
     const [reset] = useReset();
     const [input] = useInput();
-    const {range: [hi, lo], frame, fill, clear} = useBuffer(input, generator);
-    const [cursor, set_cursor] = useState(0);
+    const [
+        {frame, is_empty, is_first, is_last},
+        playback_seek,
+        playback_reset
+    ] = usePlayback(input, generator);
     useEffect(() => {
         if (reset) {
             console.debug(`resetting visualizer`);
-            clear();
+            playback_reset();
+            return;
         }
+        if (is_last)
+            console.log(`last frame. should pause`);
+        if (is_empty)
+            playback_seek(1);
     });
-    console.debug(`======== rendering visualizer ========`);
-    console.debug(`range: ${lo} to ${hi}, cursor: ${cursor}, input: ${input.length}`);
 
-    if (cursor < lo || cursor >= hi) {
-        console.debug(`cursor ${cursor} out of buffer's valid range`);
-        fill(cursor);
+    if (!frame)
         return null;
-    }
     return (
         <Nav>
             <div className="container">
                 <div className="controls"><Controls/></div>
                 <div className="visualizer"><BarChart
-                    frame={frame(cursor)}
+                    frame={frame}
                     min={1}
                     max={input.length}
                 /></div>
