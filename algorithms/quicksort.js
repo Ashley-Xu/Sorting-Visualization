@@ -1,21 +1,19 @@
 
 
-export default function* quickSort(list, smallerList, greaterList){
+export default function* quickSort(list, smallerList = 0, greaterList = list.length - 1){
 
-    if (list.length <= 1) {
-        yield {list: [...list]};
-    }else {
+    if (list.length > 1) {
         let index = partition (list, smallerList, greaterList);
+
         if (smallerList < index - 1){
-            quickSort(list, smallerList, index - 1);
+            yield* quickSort(list, smallerList, index - 1);
         }
         if (index < greaterList){
-            quickSort(list, index, greaterList);
+            yield* quickSort(list, index, greaterList);
         }
     }
     yield {list: [...list]};
-
-
+    
 }
 
 function partition(list, smallerListIndex, biggerListIndex){
@@ -29,7 +27,7 @@ function partition(list, smallerListIndex, biggerListIndex){
         while (list[j] > pivot){
             j--;
         }
-        if (j <= j){
+        if (i <= j){
             swap(list, i, j);
             i++;
             j--;
