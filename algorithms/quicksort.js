@@ -13,7 +13,7 @@ export default function* quickSort(list, smallerList = 0, greaterList = list.len
         }
     }
     yield {list: [...list]};
-    
+
 }
 
 function partition(list, smallerListIndex, biggerListIndex){
