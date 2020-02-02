@@ -18,6 +18,6 @@ function swap(arr, index1, index2){
         arr[index2] = temp;
     }
 
-return list;
+    yield {list: [...list]}
 }
 

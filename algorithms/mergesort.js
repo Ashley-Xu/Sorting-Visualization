@@ -1,16 +1,15 @@
 //translated from pseudocode https://www.cs.mcgill.ca/~dprecup/courses/IntroCS/Lectures/comp250-lecture15.pdf
 
-export default function* merge_sort(list, s = 0, e = list.length - 1){
-    //Since we need to yield the whole sorted list, it would be hard to do so during recursion
-    const mid = Math.floor((s+e)/2);
-    if ((s + 2) > e){
-        merge(list, s, mid, e);
+export default function* merge_sort(list, start = 0, end = list.length - 1){
+    const mid = Math.floor((start+end)/2);
+    if ((start + 2) > end){
+        merge(list, start, mid, end);
         yield {list: [...list]};
 
     }else{
-        yield* merge_sort(list, s, mid);
-        yield* merge_sort(list, mid+1, e);
-        merge(list, s, mid, e);
+        yield* merge_sort(list, start, mid);
+        yield* merge_sort(list, mid+1, end);
+        merge(list, start, mid, end);
         yield {list: [...list]};
     }
 }
@@ -51,17 +50,17 @@ export default function* merge_sort(list, s = 0, e = list.length - 1){
 //     }
 // }
 
-function merge(list, s, mid, e){
+function merge(list, start, mid, end){
     const copy = [...list];
     let j = mid + 1;
-    let k = s;
-    for (let i = s; i <= mid; i++){
-        while(j <= e && copy[i] > copy[j]){
+    let k = start;
+    for (let i = start; i <= mid; i++){
+        while(j <= end && copy[i] > copy[j]){
             list[k++] = copy[j++];
         }
         list[k++] = copy [i];
     }
-    while(j <= e){
+    while(j <= end){
         list[k++] = copy[j++];
     }
 }
@@ -78,7 +77,7 @@ function merge(list, s, mid, e){
 //         }else if (list1[index1] > list2[index2]){
 //             sortedList.push(list2[index2]);
 //             index2++;
-//         }else{ //if the 2 elements are equal
+//         }else{ //if the 2 elements are equal, push both elements
 //             sortedList.push(list1[index1]);
 //             index1++;
 //             sortedList.push(list2[index2]);

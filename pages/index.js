@@ -32,6 +32,7 @@ const Menu = () => {
         <MenuEntry name="Selection Sort" algorithm="selectionsort"/>
         <MenuEntry name="Insertion Sort" algorithm="insertionsort"/>
         <MenuEntry name="Merge Sort" algorithm="mergesort"/>
+        <MenuEntry name="Quick Sort" algorithm="quicksort"/>
 
         <style jsx>{`
           div {
