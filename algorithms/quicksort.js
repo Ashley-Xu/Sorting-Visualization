@@ -3,7 +3,7 @@
 export default function* quickSort(list, smallerList = 0, greaterList = list.length - 1){
 
     if (list.length > 1) {
-        let index = partition (list, smallerList, greaterList);
+        let index = partition(list, smallerList, greaterList);
 
         if (smallerList < index - 1){
             yield* quickSort(list, smallerList, index - 1);
@@ -16,12 +16,14 @@ export default function* quickSort(list, smallerList = 0, greaterList = list.len
 
 }
 
-function partition(list, smallerListIndex, biggerListIndex){
-    let pivot = list[Math.floor((biggerListIndex + smallerListIndex)/2)]; // let the pivot be the middle element
+function partition(list, smallerListIndex, largerListIndex){
+    let pivot = list[Math.floor((largerListIndex + smallerListIndex)/2)];
+    // let the pivot to be the middle element
     let i = smallerListIndex;
-    let j = biggerListIndex;
+    let j = largerListIndex;
+
     while (i <= j){
-        while (list[i] < pivot) {
+        while (list[i] < pivot){
             i++;
         }
         while (list[j] > pivot){
@@ -32,12 +34,13 @@ function partition(list, smallerListIndex, biggerListIndex){
             i++;
             j--;
         }
+        return i;
     }
-    return i;
 }
 
-function swap(list, smallerListIndex, largerListIndex){
-    let temp = list[smallerListIndex];
-    list[smallerListIndex] = list[largerListIndex];
-    list[largerListIndex]= temp;
+function swap (list, num1, num2){
+    let tmp = list[num1];
+    list[num1] = list[num2];
+    list[num2] = tmp;
 }
+

@@ -1,4 +1,6 @@
 // translated from pseudocode on wikipedia: https://en.wikipedia.org/wiki/Insertion_sort
+
+
 export default function* insertion_Sort(list) {
     let i = 1;
     while (i < list.length) {

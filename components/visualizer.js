@@ -1,5 +1,5 @@
 import React, {useState, useEffect} from "react";
-import Error from "next/error";
+//import Error from "next/error";
 import Nav from "../components/nav";
 import Controls from "../components/controls";
 import BarChart from "../components/barchart";

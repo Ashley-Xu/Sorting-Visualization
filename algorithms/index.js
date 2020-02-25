@@ -4,6 +4,7 @@ import bubblesort from "./bubblesort";
 import mergesort from "./mergesort";
 import selectionsort from "./selectionsort";
 import quicksort from "./quicksort";
+import heapsort from "./heapsort";
 
 // null are placeholders, remove when algorithm is done
 export default {
@@ -11,7 +12,7 @@ export default {
     insertionsort,
     mergesort,
     quicksort,
-    heapsort: null,
+    heapsort,
     selectionsort,
     bogosort
 };
