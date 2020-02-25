@@ -33,7 +33,7 @@ function* heap_root(list, i){
         heap_root(list, max)
     }
 
-    yield * {list: [...list]};
+    yield {list: [...list]};
 }
 
 function swap (list, num1, num2){
